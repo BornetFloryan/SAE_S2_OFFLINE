@@ -32,7 +32,7 @@ articles (tableau de dictionnaires)
                   <td>{{ ligne.nom }}</td>
                   <td>{{ ligne.id_article }}</td>
                   <td><span style="color: red">{{ ligne.libelle }}</span> ({{ ligne.type_article_id }})</td>
-                  <td>{#{ ligne.prix }#}  {{  "{:,.2f} €".format(ligne.prix) }}</td>
+                  <td>{{ ligne.prix }}</td>
                   <td>
                   {% if ligne.stock is defined %}
                      {% if ligne.stock != None  %}

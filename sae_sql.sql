@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS vetement, utilisateur, taille, type_vetement;
+DROP TABLE IF EXISTS ligne_panier, ligne_commande, commande, etat, utilisateur, vetement, taille, type_vetement;
 
 CREATE TABLE IF NOT EXISTS taille(
     id_taille INT NOT NULL AUTO_INCREMENT,
@@ -12,6 +12,22 @@ CREATE TABLE IF NOT EXISTS type_vetement(
     PRIMARY KEY(id_type_vetement)
 );
 
+CREATE TABLE IF NOT EXISTS vetement(
+    id_vetement INT NOT NULL AUTO_INCREMENT,
+    nom_vetement VARCHAR(255),
+    prix_vetement FLOAT,
+    matiere VARCHAR(255),
+    description VARCHAR(255),
+    fournisseur VARCHAR(255),
+    marque VARCHAR(255),
+    image VARCHAR(255),
+    id_taille INT,
+    id_type_vetement INT,
+    PRIMARY KEY(id_vetement),
+    FOREIGN KEY (id_taille) REFERENCES taille(id_taille),
+    FOREIGN KEY (id_type_vetement) REFERENCES type_vetement(id_type_vetement)
+);
+
 CREATE TABLE IF NOT EXISTS utilisateur (
     id_utilisateur INT NOT NULL AUTO_INCREMENT,
     login VARCHAR(255),
@@ -23,32 +39,56 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     PRIMARY KEY(id_utilisateur)
 );
 
-CREATE TABLE IF NOT EXISTS vetement(
-    id_vetement INT NOT NULL AUTO_INCREMENT,
-    nom_vetement VARCHAR(255),
-    prix_vetement FLOAT,
-    matiere VARCHAR(255),
-    description VARCHAR(255),
-    fournisseur VARCHAR(255),
-    marque VARCHAR(255),
-    id_taille INT,
-    id_type_vetement INT,
-    PRIMARY KEY(id_vetement),
-    FOREIGN KEY (id_taille) REFERENCES taille(id_taille),
-    FOREIGN KEY (id_type_vetement) REFERENCES type_vetement(id_type_vetement)
+CREATE TABLE IF NOT EXISTS etat(
+    id_etat INT NOT NULL AUTO_INCREMENT,
+    libelle VARCHAR(255),
+    PRIMARY KEY(id_etat)
+);
+
+CREATE TABLE IF NOT EXISTS commande(
+    id_commande INT NOT NULL AUTO_INCREMENT,
+    date_achat DATE,
+    utilisateur_id INT,
+    etat_id INT,
+    PRIMARY KEY(id_commande),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    FOREIGN KEY (etat_id) REFERENCES etat(id_etat)
+);
+
+CREATE TABLE IF NOT EXISTS ligne_commande(
+    commande_id INT,
+    vetement_id INT,
+    prix FLOAT,
+    quantite INT,
+    PRIMARY KEY(commande_id, vetement_id),
+    FOREIGN KEY (commande_id) REFERENCES commande(id_commande),
+    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
+);
+
+CREATE TABLE IF NOT EXISTS ligne_panier(
+    utilisateur_id INT,
+    vetement_id INT,
+    quantite INT,
+    date_ajout DATE,
+    PRIMARY KEY(utilisateur_id, vetement_id),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
 );
 
 
 INSERT INTO taille(id_taille, libelle_taille) VALUES
-(1, 'S'),
-(2, 'M'),
-(3, 'L'),
-(4, 'XL');
+(1, 'XS'),
+(2, 'S'),
+(3, 'M'),
+(4, 'L'),
+(5, 'XL'),
+(6, 'XXL');
 
 INSERT INTO type_vetement(id_type_vetement, libelle_type_vetement) VALUES
 (1, 'T-shirt'),
 (2, 'Pantalon'),
-(3, 'Chaussures');
+(3, 'Chaussures'),
+(4, 'Pull');
 
 INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) VALUES
 (1,'admin','admin@admin.fr',
@@ -61,7 +101,25 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) 
     'pbkdf2:sha256:600000$3YgdGN0QUT1jjZVN$baa9787abd4decedc328ed56d86939ce816c756ff6d94f4e4191ffc9bf357348',
     'ROLE_client','client2','1');
 
-INSERT INTO vetement(id_vetement, nom_vetement, prix_vetement, matiere, description, fournisseur, marque, id_taille, id_type_vetement) VALUES
-(1, 'T-shirt Nike', 29.99, 'Coton', 'T-shirt confortable et stylé', 'Nike', 'Nike', 1, 1),
-(2, 'Pantalon Levis', 59.99, 'Denim', 'Pantalon en denim de haute qualité', 'Levis', 'Levis', 2, 2),
-(3, 'Chaussures Adidas', 79.99, 'Cuir', 'Chaussures de sport durables', 'Adidas', 'Adidas', 3, 3);
+INSERT INTO vetement(nom_vetement, prix_vetement, matiere, description, fournisseur, marque, image,id_taille, id_type_vetement) VALUES
+('Pull Adidas', 49.99, 'Coton', 'Pull doux et confortable', 'Adidas', 'Adidas', 'pull_coton_adidas.jpg',2, 4),
+('Jean Diesel', 89.99, 'Denim', 'Jean slim fit', 'Diesel', 'Diesel', 'jean_denim_diesel.jpg',3, 2),
+('Baskets Puma', 69.99, 'Cuir', 'Baskets légères pour le sport', 'Puma','Puma', 'basket_cuir_puma.jpg', 4, 3),
+('T-shirt Gucci', 149.99, 'Coton', 'T-shirt de luxe', 'Gucci', 'Gucci', 't-shirt_coton_gucci.jpg',1, 1),
+('Pantalon Prada', 199.99, 'Denim', 'Pantalon de haute qualité', 'Prada', 'Prada', 'pantalon_denim_prada.jpg',2, 2),
+('Chaussures Louis Vuitton', 299.99, 'Cuir', 'Chaussures élégantes', 'Louis Vuitton','Louis Vuitton', 'chaussure_cuir_louis-vuitton.jpg', 3, 3),
+('Pull Versace', 129.99, 'Coton', 'Pull à la mode', 'Versace', 'Versace', 'pull_coton_versace.jpg',4, 4),
+('Jean Armani', 139.99, 'Denim', 'Jean confortable', 'Armani', 'Armani', 'jean_denim_armani.jpg',1, 2),
+('Baskets Balenciaga', 399.99, 'Toile', 'Baskets de designer', 'Balenciaga', 'Balenciaga', 'basket_toile_balenciaga.jpg',2, 3),
+('T-shirt Supreme', 99.99, 'Coton', 'T-shirt streetwear', 'Supreme', 'Supreme', 't-shirt_coton_supreme.jpg',3, 1),
+('Pantalon Off-White', 159.99, 'Denim', 'Pantalon tendance', 'Off-White', 'Off-White', 'jean_denim_off-white.jpg',4, 2),
+('Chaussures Yeezy', 249.99, 'Toile', 'Chaussures de sport à la mode', 'Yeezy', 'Yeezy', 'chaussure_toile_yeezy_.jpg',1, 3),
+('Pull Stone Island', 119.99, 'Coton', 'Pull casual', 'Stone Island', 'Stone Island', 'pull_coton_stone-island.jpg',2, 4),
+('Jean Tommy Hilfiger', 79.99, 'Denim', 'Jean classique', 'Tommy Hilfiger', 'Tommy Hilfiger', 'jean_denim_tommy.jpg',3, 2),
+('Baskets Converse', 59.99, 'Toile', 'Baskets vintage', 'Converse', 'Converse', 'chaussure_toile_converse.jpg',4, 3);
+
+INSERT INTO etat(id_etat, libelle) VALUES
+(1, 'En attente'),
+(2, 'Expédié'),
+(3, 'Validé'),
+(4, 'Confirmé');
