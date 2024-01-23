@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS ligne_panier, ligne_commande, commande, etat, utilisateur, vetement, taille, type_vetement;
+DROP TABLE IF EXISTS ligne_panier, ligne_commande, commande, etat,
+    adresse, utilisateur ,stock_vetement, vetement, taille, type_vetement;
 
 CREATE TABLE IF NOT EXISTS taille(
     id_taille INT NOT NULL AUTO_INCREMENT,
@@ -39,6 +40,17 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     PRIMARY KEY(id_utilisateur)
 );
 
+CREATE TABLE IF NOT EXISTS adresse(
+    id_adresse INT NOT NULL AUTO_INCREMENT,
+    nom_adresse VARCHAR(255),
+    rue VARCHAR(255),
+    code_postal INT,
+    ville VARCHAR(255),
+    id_utilisateur INT,
+    PRIMARY KEY(id_adresse),
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+);
+
 CREATE TABLE IF NOT EXISTS etat(
     id_etat INT NOT NULL AUTO_INCREMENT,
     libelle VARCHAR(255),
@@ -75,6 +87,15 @@ CREATE TABLE IF NOT EXISTS ligne_panier(
     FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
 );
 
+CREATE TABLE IF NOT EXISTS stock_vetement(
+    id_stock INT NOT NULL AUTO_INCREMENT,
+    id_vetement INT,
+    id_taille INT,
+    stock INT,
+    PRIMARY KEY(id_stock),
+    FOREIGN KEY (id_vetement) REFERENCES vetement(id_vetement)
+);
+
 
 INSERT INTO taille(id_taille, libelle_taille) VALUES
 (1, 'XS'),
@@ -101,7 +122,7 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) 
     'pbkdf2:sha256:600000$3YgdGN0QUT1jjZVN$baa9787abd4decedc328ed56d86939ce816c756ff6d94f4e4191ffc9bf357348',
     'ROLE_client','client2','1');
 
-INSERT INTO vetement(nom_vetement, prix_vetement, matiere, description, fournisseur, marque, image,id_taille, id_type_vetement) VALUES
+INSERT INTO vetement(nom_vetement, prix_vetement, matiere, description, fournisseur, marque,image, id_taille, id_type_vetement) VALUES
 ('Pull Adidas', 49.99, 'Coton', 'Pull doux et confortable', 'Adidas', 'Adidas', 'pull_coton_adidas.jpg',2, 4),
 ('Jean Diesel', 89.99, 'Denim', 'Jean slim fit', 'Diesel', 'Diesel', 'jean_denim_diesel.jpg',3, 2),
 ('Baskets Puma', 69.99, 'Cuir', 'Baskets légères pour le sport', 'Puma','Puma', 'basket_cuir_puma.jpg', 4, 3),
@@ -123,3 +144,21 @@ INSERT INTO etat(id_etat, libelle) VALUES
 (2, 'Expédié'),
 (3, 'Validé'),
 (4, 'Confirmé');
+
+INSERT INTO stock_vetement(id_vetement, id_taille, stock) VALUES
+(1, 1, 10),
+(1, 2, 7),
+(2, 1, 5),
+(3, 1, 8),
+(4, 1, 7),
+(5, 1, 14),
+(6, 1, 6),
+(7, 1, 7),
+(8, 1, 8),
+(9, 1, 4),
+(10, 1, 3),
+(11, 1, 1),
+(12, 1, 0),
+(13, 1, 2),
+(14, 1, 7),
+(15, 1, 16);

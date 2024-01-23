@@ -31,11 +31,22 @@
                 <label for="description">description :
                     <input name="description" type="text" class="form-control" >
                 </label>
+                <label for="id_taille">taille :
+                     <select name="id_taille" required class="form-select">
+                        <option value="">Sélectionner un type d'article</option>
+                        {% for taille in tailles %}
+                             <option value="{{ taille.id_taille }}"> {{ taille.libelle_taille }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label for="stock">stock :
+                    <input name="stock" type="number" class="form-control" >
+                </label><br>
                 <label for="submit">
                     <input name="submit" type="submit" value="Ajouter" class="btn btn-primary mt-2">
                 </label>
+                <a href="/admin/article/show"><button class="btn btn-secondary mt-2">annuler</button></a>
             </form>
-        <a href="/admin/article/show"><button class="btn btn-secondary mt-2">annuler</button></a>
         </div>
     </div>
 {% endblock %}
