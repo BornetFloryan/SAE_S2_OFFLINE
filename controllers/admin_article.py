@@ -30,7 +30,7 @@ def show_article():
             JOIN type_vetement tv ON v.id_type_vetement = tv.id_type_vetement
             LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
             LEFT JOIN taille t ON sv.id_taille = t.id_taille
-            GROUP BY v.id_vetement, sv.id_stock
+            GROUP BY v.id_vetement, sv.id_stock, v.nom_vetement, v.prix_vetement, v.id_type_vetement, v.image, tv.libelle_type_vetement, sv.stock, t.libelle_taille
     '''
     mycursor.execute(sql)
     articles = mycursor.fetchall()

@@ -15,7 +15,7 @@ def show_type_article():
                 COUNT(id_type_vetement) as nbr_article,
                 libelle_type_vetement as libelle
                 FROM type_vetement
-                GROUP BY id_type_vetement'''
+                GROUP BY id_type_vetement, libelle_type_vetement'''
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
     return render_template('admin/type_article/show_type_article.html', types_article=types_article)
@@ -50,7 +50,8 @@ def edit_type_article():
     mycursor = get_db().cursor()
     sql = '''SELECT tv.id_type_vetement as id_type_article,
                 tv.libelle_type_vetement as libelle
-            FROM type_vetement tv WHERE id_type_vetement = %s '''
+            FROM type_vetement tv WHERE id_type_vetement = %s
+            GROUP BY id_type_vetement, libelle_type_vetement'''
     mycursor.execute(sql, (id_type_article,))
     type_article = mycursor.fetchone()
     return render_template('admin/type_article/edit_type_article.html', type_article=type_article)
