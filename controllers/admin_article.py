@@ -17,19 +17,43 @@ admin_article = Blueprint('admin_article', __name__,
 @admin_article.route('/admin/article/show')
 def show_article():
     mycursor = get_db().cursor()
-    sql = '''  requête admin_article_1
+    sql = '''SELECT
+                v.id_vetement as id_article,
+                nom_vetement as nom,
+                prix_vetement as prix,
+                v.id_type_vetement as type_article_id,
+                image as image,
+                libelle_type_vetement as libelle,
+                sv.stock as stock,
+                t.libelle_taille as taille
+            FROM vetement v
+            JOIN type_vetement tv ON v.id_type_vetement = tv.id_type_vetement
+            LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
+            LEFT JOIN taille t ON sv.id_taille = t.id_taille
+            GROUP BY v.id_vetement, sv.id_stock
     '''
     mycursor.execute(sql)
     articles = mycursor.fetchall()
+
     return render_template('admin/article/show_article.html', articles=articles)
+
 
 
 @admin_article.route('/admin/article/add', methods=['GET'])
 def add_article():
     mycursor = get_db().cursor()
+    sql = ''' SELECT id_type_vetement as id_type_article,
+                libelle_type_vetement as libelle
+            FROM type_vetement '''
+    mycursor.execute(sql)
+    type_article = mycursor.fetchall()
 
+    sql = '''SELECT id_taille, libelle_taille FROM taille'''
+    mycursor.execute(sql)
+    tailles = mycursor.fetchall()
     return render_template('admin/article/add_article.html'
-                           #,types_article=type_article,
+                           ,types_article=type_article,
+                           tailles = tailles,
                            #,couleurs=colors
                            #,tailles=tailles
                             )
@@ -52,11 +76,21 @@ def valid_add_article():
         print("erreur")
         filename=None
 
-    sql = '''  requête admin_article_2 '''
+    sql = ''' INSERT INTO vetement (nom_vetement, image, prix_vetement, id_type_vetement, description) VALUES (%s, %s, %s, %s, %s) '''
 
     tuple_add = (nom, filename, prix, type_article_id, description)
     print(tuple_add)
     mycursor.execute(sql, tuple_add)
+    get_db().commit()
+
+    id_taille = request.form.get('id_taille', '')
+    print(id_taille)
+    stock = request.form.get('stock', '')
+
+    #sql = ''' INSERT INTO stock_vetement (id_vetement, id_taille, stock) VALUES (LAST_INSERT_ID(), %s, %s) '''
+
+    #tuple_add = (id_taille, stock)
+    #mycursor.execute(sql, tuple_add)
     get_db().commit()
 
     print(u'article ajouté , nom: ', nom, ' - type_article:', type_article_id, ' - prix:', prix,

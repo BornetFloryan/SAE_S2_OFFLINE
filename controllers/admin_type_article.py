@@ -11,10 +11,13 @@ admin_type_article = Blueprint('admin_type_article', __name__,
 @admin_type_article.route('/admin/type-article/show')
 def show_type_article():
     mycursor = get_db().cursor()
-    # sql = '''         '''
-    # mycursor.execute(sql)
-    # types_article = mycursor.fetchall()
-    types_article=[]
+    sql = '''SELECT id_type_vetement as id_type_article, 
+                COUNT(id_type_vetement) as nbr_article,
+                libelle_type_vetement as libelle
+                FROM type_vetement
+                GROUP BY id_type_vetement'''
+    mycursor.execute(sql)
+    types_article = mycursor.fetchall()
     return render_template('admin/type_article/show_type_article.html', types_article=types_article)
 
 @admin_type_article.route('/admin/type-article/add', methods=['GET'])
@@ -26,7 +29,7 @@ def valid_add_type_article():
     libelle = request.form.get('libelle', '')
     tuple_insert = (libelle,)
     mycursor = get_db().cursor()
-    sql = '''         '''
+    sql = ''' INSERT INTO type_vetement (libelle_type_vetement) VALUES (%s) '''
     mycursor.execute(sql, tuple_insert)
     get_db().commit()
     message = u'type ajouté , libellé :'+libelle
@@ -45,7 +48,9 @@ def delete_type_article():
 def edit_type_article():
     id_type_article = request.args.get('id_type_article', '')
     mycursor = get_db().cursor()
-    sql = '''   '''
+    sql = '''SELECT tv.id_type_vetement as id_type_article,
+                tv.libelle_type_vetement as libelle
+            FROM type_vetement tv WHERE id_type_vetement = %s '''
     mycursor.execute(sql, (id_type_article,))
     type_article = mycursor.fetchone()
     return render_template('admin/type_article/edit_type_article.html', type_article=type_article)
@@ -56,7 +61,7 @@ def valid_edit_type_article():
     id_type_article = request.form.get('id_type_article', '')
     tuple_update = (libelle, id_type_article)
     mycursor = get_db().cursor()
-    sql = '''   '''
+    sql = ''' UPDATE type_vetement SET libelle_type_vetement = %s WHERE id_type_vetement = %s '''
     mycursor.execute(sql, tuple_update)
     get_db().commit()
     flash(u'type article modifié, id: ' + id_type_article + " libelle : " + libelle, 'alert-success')
