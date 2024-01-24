@@ -22,10 +22,8 @@ CREATE TABLE IF NOT EXISTS vetement(
     fournisseur VARCHAR(255),
     marque VARCHAR(255),
     image VARCHAR(255),
-    id_taille INT,
     id_type_vetement INT,
     PRIMARY KEY(id_vetement),
-    FOREIGN KEY (id_taille) REFERENCES taille(id_taille),
     FOREIGN KEY (id_type_vetement) REFERENCES type_vetement(id_type_vetement)
 );
 
@@ -122,22 +120,22 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) 
     'pbkdf2:sha256:600000$3YgdGN0QUT1jjZVN$baa9787abd4decedc328ed56d86939ce816c756ff6d94f4e4191ffc9bf357348',
     'ROLE_client','client2','1');
 
-INSERT INTO vetement(nom_vetement, prix_vetement, matiere, description, fournisseur, marque,image, id_taille, id_type_vetement) VALUES
-('Pull Adidas', 49.99, 'Coton', 'Pull doux et confortable', 'Adidas', 'Adidas', 'pull_coton_adidas.jpg',2, 4),
-('Jean Diesel', 89.99, 'Denim', 'Jean slim fit', 'Diesel', 'Diesel', 'jean_denim_diesel.jpg',3, 2),
-('Baskets Puma', 69.99, 'Cuir', 'Baskets légères pour le sport', 'Puma','Puma', 'basket_cuir_puma.jpg', 4, 3),
-('T-shirt Gucci', 149.99, 'Coton', 'T-shirt de luxe', 'Gucci', 'Gucci', 't-shirt_coton_gucci.jpg',1, 1),
-('Pantalon Prada', 199.99, 'Denim', 'Pantalon de haute qualité', 'Prada', 'Prada', 'pantalon_denim_prada.jpg',2, 2),
-('Chaussures Louis Vuitton', 299.99, 'Cuir', 'Chaussures élégantes', 'Louis Vuitton','Louis Vuitton', 'chaussure_cuir_louis-vuitton.jpg', 3, 3),
-('Pull Versace', 129.99, 'Coton', 'Pull à la mode', 'Versace', 'Versace', 'pull_coton_versace.jpg',4, 4),
-('Jean Armani', 139.99, 'Denim', 'Jean confortable', 'Armani', 'Armani', 'jean_denim_armani.jpg',1, 2),
-('Baskets Balenciaga', 399.99, 'Toile', 'Baskets de designer', 'Balenciaga', 'Balenciaga', 'basket_toile_balenciaga.jpg',2, 3),
-('T-shirt Supreme', 99.99, 'Coton', 'T-shirt streetwear', 'Supreme', 'Supreme', 't-shirt_coton_supreme.jpg',3, 1),
-('Pantalon Off-White', 159.99, 'Denim', 'Pantalon tendance', 'Off-White', 'Off-White', 'jean_denim_off-white.jpg',4, 2),
-('Chaussures Yeezy', 249.99, 'Toile', 'Chaussures de sport à la mode', 'Yeezy', 'Yeezy', 'chaussure_toile_yeezy_.jpg',1, 3),
-('Pull Stone Island', 119.99, 'Coton', 'Pull casual', 'Stone Island', 'Stone Island', 'pull_coton_stone-island.jpg',2, 4),
-('Jean Tommy Hilfiger', 79.99, 'Denim', 'Jean classique', 'Tommy Hilfiger', 'Tommy Hilfiger', 'jean_denim_tommy.jpg',3, 2),
-('Baskets Converse', 59.99, 'Toile', 'Baskets vintage', 'Converse', 'Converse', 'chaussure_toile_converse.jpg',4, 3);
+INSERT INTO vetement(nom_vetement, prix_vetement, matiere, description, fournisseur, marque,image, id_type_vetement) VALUES
+('Pull Adidas', 49.99, 'Coton', 'Pull doux et confortable', 'Adidas', 'Adidas', 'pull_coton_adidas.jpg', 4),
+('Jean Diesel', 89.99, 'Denim', 'Jean slim fit', 'Diesel', 'Diesel', 'jean_denim_diesel.jpg', 2),
+('Baskets Puma', 69.99, 'Cuir', 'Baskets légères pour le sport', 'Puma','Puma', 'basket_cuir_puma.jpg', 3),
+('T-shirt Gucci', 149.99, 'Coton', 'T-shirt de luxe', 'Gucci', 'Gucci', 't-shirt_coton_gucci.jpg', 1),
+('Pantalon Prada', 199.99, 'Denim', 'Pantalon de haute qualité', 'Prada', 'Prada', 'pantalon_denim_prada.jpg', 2),
+('Chaussures Louis Vuitton', 299.99, 'Cuir', 'Chaussures élégantes', 'Louis Vuitton','Louis Vuitton', 'chaussure_cuir_louis-vuitton.jpg', 3),
+('Pull Versace', 129.99, 'Coton', 'Pull à la mode', 'Versace', 'Versace', 'pull_coton_versace.jpg', 4),
+('Jean Armani', 139.99, 'Denim', 'Jean confortable', 'Armani', 'Armani', 'jean_denim_armani.jpg', 2),
+('Baskets Balenciaga', 399.99, 'Toile', 'Baskets de designer', 'Balenciaga', 'Balenciaga', 'basket_toile_balenciaga.jpg', 3),
+('T-shirt Supreme', 99.99, 'Coton', 'T-shirt streetwear', 'Supreme', 'Supreme', 't-shirt_coton_supreme.jpg', 1),
+('Pantalon Off-White', 159.99, 'Denim', 'Pantalon tendance', 'Off-White', 'Off-White', 'jean_denim_off-white.jpg', 2),
+('Chaussures Yeezy', 249.99, 'Toile', 'Chaussures de sport à la mode', 'Yeezy', 'Yeezy', 'chaussure_toile_yeezy_.jpg', 3),
+('Pull Stone Island', 119.99, 'Coton', 'Pull casual', 'Stone Island', 'Stone Island', 'pull_coton_stone-island.jpg', 4),
+('Jean Tommy Hilfiger', 79.99, 'Denim', 'Jean classique', 'Tommy Hilfiger', 'Tommy Hilfiger', 'jean_denim_tommy.jpg', 2),
+('Baskets Converse', 59.99, 'Toile', 'Baskets vintage', 'Converse', 'Converse', 'chaussure_toile_converse.jpg', 3);
 
 INSERT INTO etat(id_etat, libelle) VALUES
 (1, 'En attente'),
@@ -161,4 +159,4 @@ INSERT INTO stock_vetement(id_vetement, id_taille, stock) VALUES
 (12, 1, 0),
 (13, 1, 2),
 (14, 1, 7),
-(15, 1, 16);
+(15, 1, 7);
