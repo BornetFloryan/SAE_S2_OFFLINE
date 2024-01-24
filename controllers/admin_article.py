@@ -79,18 +79,21 @@ def valid_add_article():
     sql = ''' INSERT INTO vetement (nom_vetement, image, prix_vetement, id_type_vetement, description) VALUES (%s, %s, %s, %s, %s) '''
 
     tuple_add = (nom, filename, prix, type_article_id, description)
-    print(tuple_add)
     mycursor.execute(sql, tuple_add)
     get_db().commit()
 
+    id_vetement = '''SELECT MAX(id_vetement) FROM vetement'''
+    mycursor.execute(id_vetement)
+    id_vetement = mycursor.fetchone()
+    valeur = list(id_vetement.values())[0]
+
     id_taille = request.form.get('id_taille', '')
-    print(id_taille)
     stock = request.form.get('stock', '')
 
-    #sql = ''' INSERT INTO stock_vetement (id_vetement, id_taille, stock) VALUES (LAST_INSERT_ID(), %s, %s) '''
+    sql = ''' INSERT INTO stock_vetement (id_vetement, id_taille, stock) VALUES (%s, %s, %s) '''
 
-    #tuple_add = (id_taille, stock)
-    #mycursor.execute(sql, tuple_add)
+    tuple_add = (valeur, id_taille, stock)
+    mycursor.execute(sql, tuple_add)
     get_db().commit()
 
     print(u'article ajouté , nom: ', nom, ' - type_article:', type_article_id, ' - prix:', prix,
