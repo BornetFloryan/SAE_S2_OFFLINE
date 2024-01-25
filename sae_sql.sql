@@ -163,7 +163,6 @@ INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, date_ajout) VALU
 
 INSERT INTO stock_vetement(id_vetement, id_taille, stock) VALUES
 (1, 1, 10),
-(1, 2, 7),
 (2, 1, 5),
 (3, 1, 8),
 (4, 1, 7),
