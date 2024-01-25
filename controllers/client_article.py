@@ -14,12 +14,16 @@ def client_article_show():                                 # remplace client_ind
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    sql = '''   SELECT id_vetement as id , 
-    nom_vetement as nom, 
-    prix_vetement as prix,  
-    image as image, 
-    id_type_vetement as id_type
-                FROM vetement '''
+    sql = '''   SELECT vetement.id_vetement as id , 
+                nom_vetement as nom, 
+                prix_vetement as prix,  
+                image as image, 
+                id_type_vetement as id_type,
+                stock_vetement.stock as stock
+                FROM vetement 
+                LEFT JOIN stock_vetement on vetement.id_vetement = stock_vetement.id_vetement
+                GROUP BY vetement.id_vetement, nom_vetement, prix_vetement, image, id_type_vetement, stock_vetement.stock
+                '''
     list_param = []
     condition_and = ""
     # utilisation du filtre
