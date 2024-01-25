@@ -11,11 +11,12 @@ admin_type_article = Blueprint('admin_type_article', __name__,
 @admin_type_article.route('/admin/type-article/show')
 def show_type_article():
     mycursor = get_db().cursor()
-    sql = '''SELECT id_type_vetement as id_type_article, 
-                COUNT(id_type_vetement) as nbr_article,
-                libelle_type_vetement as libelle
-                FROM type_vetement
-                GROUP BY id_type_vetement, libelle_type_vetement'''
+    sql = '''SELECT tv.id_type_vetement as id_type_article, 
+                COUNT(v.id_type_vetement) as nbr_articles,
+                tv.libelle_type_vetement as libelle
+                FROM type_vetement tv
+                LEFT JOIN vetement v on tv.id_type_vetement = v.id_type_vetement
+                GROUP BY tv.id_type_vetement, tv.libelle_type_vetement'''
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
     return render_template('admin/type_article/show_type_article.html', types_article=types_article)
