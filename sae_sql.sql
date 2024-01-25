@@ -109,17 +109,6 @@ INSERT INTO type_vetement(id_type_vetement, libelle_type_vetement) VALUES
 (3, 'Chaussures'),
 (4, 'Pull');
 
-INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) VALUES
-(1,'admin','admin@admin.fr',
-    'pbkdf2:sha256:600000$828ij7RCZN24IWfq$3dbd14ea15999e9f5e340fe88278a45c1f41901ee6b2f56f320bf1fa6adb933d',
-    'ROLE_admin','admin','1'),
-(2,'client','client@client.fr',
-    'pbkdf2:sha256:600000$ik00jnCw52CsLSlr$9ac8f694a800bca6ee25de2ea2db9e5e0dac3f8b25b47336e8f4ef9b3de189f4',
-    'ROLE_client','client','1'),
-(3,'client2','client2@client2.fr',
-    'pbkdf2:sha256:600000$3YgdGN0QUT1jjZVN$baa9787abd4decedc328ed56d86939ce816c756ff6d94f4e4191ffc9bf357348',
-    'ROLE_client','client2','1');
-
 INSERT INTO vetement(nom_vetement, prix_vetement, matiere, description, fournisseur, marque,image, id_type_vetement) VALUES
 ('Pull Adidas', 49.99, 'Coton', 'Pull doux et confortable', 'Adidas', 'Adidas', 'pull_coton_adidas.jpg', 4),
 ('Jean Diesel', 89.99, 'Denim', 'Jean slim fit', 'Diesel', 'Diesel', 'jean_denim_diesel.jpg', 2),
@@ -137,11 +126,40 @@ INSERT INTO vetement(nom_vetement, prix_vetement, matiere, description, fourniss
 ('Jean Tommy Hilfiger', 79.99, 'Denim', 'Jean classique', 'Tommy Hilfiger', 'Tommy Hilfiger', 'jean_denim_tommy.jpg', 2),
 ('Baskets Converse', 59.99, 'Toile', 'Baskets vintage', 'Converse', 'Converse', 'chaussure_toile_converse.jpg', 3);
 
+INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) VALUES
+(1,'admin','admin@admin.fr',
+    'pbkdf2:sha256:600000$828ij7RCZN24IWfq$3dbd14ea15999e9f5e340fe88278a45c1f41901ee6b2f56f320bf1fa6adb933d',
+    'ROLE_admin','admin','1'),
+(2,'client','client@client.fr',
+    'pbkdf2:sha256:600000$ik00jnCw52CsLSlr$9ac8f694a800bca6ee25de2ea2db9e5e0dac3f8b25b47336e8f4ef9b3de189f4',
+    'ROLE_client','client','1'),
+(3,'client2','client2@client2.fr',
+    'pbkdf2:sha256:600000$3YgdGN0QUT1jjZVN$baa9787abd4decedc328ed56d86939ce816c756ff6d94f4e4191ffc9bf357348',
+    'ROLE_client','client2','1');
+
+INSERT INTO adresse(id_adresse, nom_adresse, rue, code_postal, ville, id_utilisateur) VALUES
+(1, 'client1', '9 rue des Peupliers', 31000, 'Toulouse', 2),
+(2, 'client2', '24 rue des Ecoles', 49000, 'Angers', 3);
+
 INSERT INTO etat(id_etat, libelle) VALUES
 (1, 'En attente'),
 (2, 'Expédié'),
 (3, 'Validé'),
 (4, 'Confirmé');
+
+INSERT INTO commande(id_commande, date_achat, utilisateur_id, etat_id) VALUES
+(1, '2024-01-25', 2, 1),
+(2, '2024-01-24', 3, 2);
+
+INSERT INTO ligne_commande(commande_id, vetement_id, prix, quantite) VALUES
+(1, 1, 29.99, 2),
+(1, 2, 79.99, 1),
+(2, 3, 49.99, 1),
+(2, 4, 69.99, 3);
+
+INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, date_ajout) VALUES
+(2, 5, 2, '2024-01-25'),
+(2, 6, 1, '2024-01-25');
 
 INSERT INTO stock_vetement(id_vetement, id_taille, stock) VALUES
 (1, 1, 10),
