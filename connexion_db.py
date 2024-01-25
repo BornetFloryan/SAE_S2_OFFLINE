@@ -16,4 +16,3 @@ def get_db():
             cursorclass=pymysql.cursors.DictCursor
         )
     return db
-#sdasdqsdzadr
