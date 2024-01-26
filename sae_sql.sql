@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS ligne_panier, ligne_commande, commande, etat,
-    adresse, utilisateur ,stock_vetement, vetement, taille, type_vetement;
+    adresse, utilisateur ,stock_vetement, vetement, taille, type_vetement, commentaire, note;
 
 CREATE TABLE IF NOT EXISTS taille(
     id_taille INT NOT NULL AUTO_INCREMENT,
@@ -27,6 +27,17 @@ CREATE TABLE IF NOT EXISTS vetement(
     FOREIGN KEY (id_type_vetement) REFERENCES type_vetement(id_type_vetement)
 );
 
+
+CREATE TABLE IF NOT EXISTS note (
+    id_note INT AUTO_INCREMENT,
+    note FLOAT,
+    utilisateur_id INT,
+    vetement_id INT,
+    PRIMARY KEY(id_note),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
+);
+
 CREATE TABLE IF NOT EXISTS utilisateur (
     id_utilisateur INT NOT NULL AUTO_INCREMENT,
     login VARCHAR(255),
@@ -36,6 +47,17 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     nom VARCHAR(255),
     est_actif TINYINT(1),
     PRIMARY KEY(id_utilisateur)
+);
+
+CREATE TABLE IF NOT EXISTS commentaire (
+    id_commentaire INT AUTO_INCREMENT,
+    contenu VARCHAR(255),
+    date_ajout DATETIME,
+    utilisateur_id INT,
+    vetement_id INT,
+    PRIMARY KEY(id_commentaire),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
 );
 
 CREATE TABLE IF NOT EXISTS adresse(
@@ -91,8 +113,7 @@ CREATE TABLE IF NOT EXISTS stock_vetement(
     id_taille INT,
     stock INT,
     PRIMARY KEY(id_stock),
-    FOREIGN KEY (id_vetement) REFERENCES vetement(id_vetement),
-    FOREIGN KEY (id_taille) REFERENCES taille(id_taille)
+    FOREIGN KEY (id_vetement) REFERENCES vetement(id_vetement)
 );
 
 
@@ -163,7 +184,7 @@ INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, date_ajout) VALU
 (2, 6, 1, '2024-01-25');
 
 INSERT INTO stock_vetement(id_vetement, id_taille, stock) VALUES
-(1, 2, 10),
+(1, 1, 10),
 (2, 1, 5),
 (3, 1, 8),
 (4, 1, 7),
@@ -178,3 +199,4 @@ INSERT INTO stock_vetement(id_vetement, id_taille, stock) VALUES
 (13, 1, 2),
 (14, 1, 7),
 (15, 1, 7);
+
