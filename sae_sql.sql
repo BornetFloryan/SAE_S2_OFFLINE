@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS ligne_panier, ligne_commande, commande, etat,
-    adresse, utilisateur ,stock_vetement, vetement, taille, type_vetement, commentaire, note;
+    adresse, note, utilisateur ,stock_vetement, vetement, taille, type_vetement, commentaire;
 
 CREATE TABLE IF NOT EXISTS taille(
     id_taille INT NOT NULL AUTO_INCREMENT,
