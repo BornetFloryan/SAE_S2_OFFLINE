@@ -25,7 +25,7 @@ def client_article_details():
         FROM vetement ve
         LEFT JOIN note n ON ve.id_vetement = n.vetement_id
         WHERE ve.id_vetement = %s 
-        GROUP BY ve.nom_vetement, ve.prix_vetement '''
+        GROUP BY ve.nom_vetement, ve.prix_vetement, ve.image, ve.description, ve.id_vetement'''
 
 
     mycursor.execute(sql, (id_article,))
