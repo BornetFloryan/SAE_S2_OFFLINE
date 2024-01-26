@@ -91,7 +91,8 @@ CREATE TABLE IF NOT EXISTS stock_vetement(
     id_taille INT,
     stock INT,
     PRIMARY KEY(id_stock),
-    FOREIGN KEY (id_vetement) REFERENCES vetement(id_vetement)
+    FOREIGN KEY (id_vetement) REFERENCES vetement(id_vetement),
+    FOREIGN KEY (id_taille) REFERENCES taille(id_taille)
 );
 
 
@@ -162,7 +163,7 @@ INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, date_ajout) VALU
 (2, 6, 1, '2024-01-25');
 
 INSERT INTO stock_vetement(id_vetement, id_taille, stock) VALUES
-(1, 1, 10),
+(1, 2, 10),
 (2, 1, 5),
 (3, 1, 8),
 (4, 1, 7),
