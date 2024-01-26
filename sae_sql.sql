@@ -27,17 +27,6 @@ CREATE TABLE IF NOT EXISTS vetement(
     FOREIGN KEY (id_type_vetement) REFERENCES type_vetement(id_type_vetement)
 );
 
-
-CREATE TABLE IF NOT EXISTS note (
-    id_note INT AUTO_INCREMENT,
-    note FLOAT,
-    utilisateur_id INT,
-    vetement_id INT,
-    PRIMARY KEY(id_note),
-    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
-    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
-);
-
 CREATE TABLE IF NOT EXISTS utilisateur (
     id_utilisateur INT NOT NULL AUTO_INCREMENT,
     login VARCHAR(255),
@@ -47,6 +36,16 @@ CREATE TABLE IF NOT EXISTS utilisateur (
     nom VARCHAR(255),
     est_actif TINYINT(1),
     PRIMARY KEY(id_utilisateur)
+);
+
+CREATE TABLE IF NOT EXISTS note (
+    id_note INT AUTO_INCREMENT,
+    note FLOAT,
+    utilisateur_id INT,
+    vetement_id INT,
+    PRIMARY KEY(id_note),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
 );
 
 CREATE TABLE IF NOT EXISTS commentaire (
