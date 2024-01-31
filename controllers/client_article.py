@@ -41,12 +41,15 @@ def client_article_show():                                 # remplace client_ind
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
 
-    sql = '''SELECT * ,
-           ROUND(prix_vetement, 2) as prix ,
-           nom_vetement as nom
+    sql = '''SELECT nom_vetement as nom,
+            quantite,
+           ROUND(prix_vetement, 2) as prix
            FROM ligne_panier
-           LEFT JOIN vetement on vetement.id_vetement = ligne_panier.vetement_id'''
-    mycursor.execute(sql)
+           LEFT JOIN vetement on vetement.id_vetement = ligne_panier.vetement_id
+           WHERE utilisateur_id = %s
+           GROUP BY nom_vetement, quantite, prix_vetement
+                      '''
+    mycursor.execute(sql, (id_client,))
     articles_panier = mycursor.fetchall()
 
     if len(articles_panier) >= 1:

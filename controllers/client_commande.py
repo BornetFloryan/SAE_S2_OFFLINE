@@ -66,8 +66,22 @@ def client_commande_add():
 def client_commande_show():
     mycursor = get_db().cursor()
     id_client = session['id_user']
-    sql = '''  selection des commandes ordonnées par état puis par date d'achat descendant '''
-    commandes = []
+    sql = '''  SELECT id_commande,
+                        date_achat,
+                        utilisateur_id,
+                        etat_id,
+                        COUNT(vetement_id) as nbr_articles,
+                        SUM(prix) as prix_total,
+                        libelle
+                FROM commande
+                JOIN ligne_commande ON commande.id_commande = ligne_commande.commande_id
+                JOIN etat ON commande.etat_id = etat.id_etat
+                WHERE utilisateur_id = %s
+                GROUP BY id_commande, date_achat, utilisateur_id, etat_id, libelle
+                ORDER BY etat_id, date_achat
+                '''
+    mycursor.execute(sql, (id_client,))
+    commandes = mycursor.fetchall()
 
     articles_commande = None
     commande_adresses = None
