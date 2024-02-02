@@ -4,7 +4,7 @@ import pymysql.cursors
 
 import os                                 # à ajouter
 from dotenv import load_dotenv            # à ajouter
-load_dotenv()                             # à ajouter
+load_dotenv("./.env")                             # à ajouter
 
 def get_db():
     if 'db' not in g:
