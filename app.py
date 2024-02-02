@@ -4,6 +4,7 @@
 from flask import Flask, request, render_template, redirect, url_for, abort, flash, session, g
 from flask import Blueprint
 from subprocess import run
+from dotenv import load_dotenv
 
 from controllers.auth_security import *
 from controllers.fixtures_load import *
@@ -25,20 +26,22 @@ from controllers.client_liste_envies import *
 app = Flask(__name__)
 app.secret_key = 'une cle(token) : grain de sel(any random string)'
 
+load_dotenv()
+@app.route('/github_webhook', methods=['POST'])
+def github_webhook():
+    if request.method == 'POST':
+        host = os.getenv("HOST")
+        if host != "localhost":
+            run("touch /var/www/vetementsae_pythonanywhere_com_wsgi.py", shell=True)
+            return 'Succès', 200
+    else:
+        return 'Méthode non autorisée', 405
 
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
-
-@app.route('/github_webhook', methods=['POST'])
-def github_webhook():
-    if request.method == 'POST':
-        run("touch /var/www/vetementsae_pythonanywhere_com_wsgi.py", shell=True)
-        return 'Succès', 200
-    else:
-        return 'Méthode non autorisée', 405
 
 if __name__ == "__main__":
     app.run()
