@@ -30,6 +30,3 @@ Thumbs.db
 
 # Ignorer le fichier de connection à la base de donnée
 connexion_db.py
-
-# Ignorer le fichier d'information de connection .env
-.env
