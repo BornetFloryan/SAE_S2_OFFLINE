@@ -1,0 +1,35 @@
+# Ignorer les fichiers temporaires
+*.tmp
+
+# Ignorer les fichiers de sauvegarde
+*~
+
+# Ignorer les fichiers de configuration spécifiques à l'éditeur
+.vscode/
+.idea/
+
+# Ignorer les fichiers de dépendances (générés par exemple par npm ou pip)
+node_modules/
+venv/
+
+# Ignorer les fichiers de build générés
+/build/
+/dist/
+
+# Ignorer les fichiers spécifiques à votre environnement ou à votre système
+.env
+.DS_Store
+Thumbs.db
+
+# Ignorer les fichiers de logs
+*.log
+
+# Ignorer les fichiers de documentation générés
+/doc/
+/docs/
+
+# Ignorer le fichier de connection à la base de donnée
+connexion_db.py
+
+# Ignorer le fichier d'information de connection .env
+.env
