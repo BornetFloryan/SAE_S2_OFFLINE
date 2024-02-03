@@ -82,10 +82,13 @@
                                 </td>
                                 <td> {{ commande.libelle }}</td>
                                 <td style="text-align: center;">
+                                    {% if commande.etat_id != 2 %}
                                     <form action="/admin/commande/valider" style="display: inline-block;"  method="post">
                                         <input type="hidden" name="id_commande" value="{{ commande.id_commande }}">
                                         <button class="btn btn-primary" > Valider (Expédier) </button>
+                                    {% endif %}
                                     </form>
+
                                     <a href="/admin/commande/show?id_commande={{ commande.id_commande }}">
                                         <button class="btn btn-primary" > Details </button>
                                     </a>

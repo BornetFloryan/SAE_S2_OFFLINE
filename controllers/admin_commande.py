@@ -18,9 +18,24 @@ def admin_index():
 def admin_commande_show():
     mycursor = get_db().cursor()
     admin_id = session['id_user']
-    sql = '''      '''
-
-    commandes=[]
+    sql = '''   
+    SELECT id_commande,
+    etat_id,
+    login,
+    date_achat,
+    SUM(quantite) as nbr_articles,
+    ROUND(SUM(vetement.prix_vetement * quantite), 2) as prix_total,
+    etat.libelle
+    FROM commande 
+    JOIN utilisateur ON commande.utilisateur_id = utilisateur.id_utilisateur
+    JOIN etat ON commande.etat_id = etat.id_etat
+    JOIN ligne_commande ON commande.id_commande = ligne_commande.commande_id
+    JOIN vetement ON ligne_commande.vetement_id = vetement.id_vetement
+    GROUP BY id_commande, etat_id, login, date_achat, etat.libelle
+    ORDER BY etat_id, date_achat DESC
+    '''
+    mycursor.execute(sql)
+    commandes= mycursor.fetchall()
 
     articles_commande = None
     commande_adresses = None
@@ -42,7 +57,7 @@ def admin_commande_valider():
     commande_id = request.form.get('id_commande', None)
     if commande_id != None:
         print(commande_id)
-        sql = '''           '''
+        sql = ''' UPDATE commande SET etat_id = 2 WHERE id_commande = %s'''
         mycursor.execute(sql, commande_id)
         get_db().commit()
     return redirect('/admin/commande/show')
