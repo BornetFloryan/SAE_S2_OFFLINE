@@ -1,6 +1,0 @@
-
-_python:S1854;"HRemove this assignment to local variable 'sql'; the value is never used.(°¶6
-Kpython:S1481<".Remove the unused local variable "prix_total".(Ε–έ²ϊÿÿÿÿ
-Fpython:S1481".Remove the unused local variable "list_param".(β—„™
-Ipython:S1481"1Remove the unused local variable "condition_and".(»£²
-Epython:S1481"(Remove the unused local variable "sql3".(†Έ¥τόÿÿÿÿ
