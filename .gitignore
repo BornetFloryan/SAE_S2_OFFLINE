@@ -1,0 +1,10 @@
+# Ignorer le .env, .idea, .git
+.env
+.idea
+.git
+
+# Ignorer le flask_run.bat
+flask_run.bat
+
+
+
