@@ -9,5 +9,8 @@ flask_run.bat
 # Ignorer les __pycache__
 __pycache__/
 
+# Ignorer les desktop.ini
+desktop.ini
+
 
 
