@@ -5,3 +5,9 @@
 
 # Ignorer le flask_run.bat
 flask_run.bat
+
+# Ignorer les __pycache__
+__pycache__/
+
+
+
