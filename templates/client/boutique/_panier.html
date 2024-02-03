@@ -59,9 +59,8 @@
                         <button class="btn btn-primary" > Passer ma commande </button>
                     </form>
                     {% endif %}
-                    {% if prix_total %}
-                    Total à payer : <strong>{{ "{:,.2f} €".format(prix_total) }}</strong>
+                    {% if prix_total and prix_total["prix_total"] is defined %}
+                        Total à payer : <strong>{{ "{:,.2f} €".format(prix_total["prix_total"]) }}</strong>
                     {% endif %}
-
             {% endif %}
             </div>

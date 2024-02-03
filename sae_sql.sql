@@ -168,9 +168,9 @@ INSERT INTO etat(id_etat, libelle) VALUES
 (3, 'Validé'),
 (4, 'Confirmé');
 
-INSERT INTO commande(id_commande, date_achat, utilisateur_id, etat_id) VALUES
-(1, '2024-01-25', 2, 1),
-(2, '2024-01-24', 3, 2);
+INSERT INTO commande(date_achat, utilisateur_id, etat_id) VALUES
+('2024-01-25', 2, 1),
+('2024-01-24', 3, 2);
 
 INSERT INTO ligne_commande(commande_id, vetement_id, prix, quantite) VALUES
 (1, 1, 29.99, 2),

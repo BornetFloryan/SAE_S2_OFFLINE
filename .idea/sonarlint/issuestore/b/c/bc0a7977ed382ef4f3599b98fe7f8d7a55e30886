@@ -1,0 +1,9 @@
+
+rpython:S1192F"UDefine a constant instead of duplicating this literal '/client/article/show' 6 times.(òæ”úÿÿÿÿ
+ipython:S1854"LRemove this assignment to local variable 'article'; the value is never used.(¶ïøÇúÿÿÿÿ
+Qpython:S1481:":Remove the unused local variable "id_declinaison_article".(©óÚ`
+7python:S125„"Remove this commented out code.(¾”Á
+Npython:S1481"0Remove the unused local variable "filter_types".(¢µ¸–ıÿÿÿÿ
+Hpython:S1481›"/Remove the unused local variable "filter_word".(Â¾ü¬
+Lpython:S1481œ"3Remove the unused local variable "filter_prix_min".(ıê†Á
+Qpython:S1481"3Remove the unused local variable "filter_prix_max".(Æ×•ïûÿÿÿÿ

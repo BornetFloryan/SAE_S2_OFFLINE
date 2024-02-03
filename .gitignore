@@ -1,2 +1,4 @@
-# Ignorer le .env
+# Ignorer le .env, .idea, .git
 .env
+.idea
+.git
