@@ -2,3 +2,6 @@
 .env
 .idea
 .git
+
+# Ignorer le flask_run.bat
+flask_run.bat
