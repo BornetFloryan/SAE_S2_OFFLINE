@@ -139,13 +139,24 @@ def edit_article():
     id_article=request.args.get('id_article')
     mycursor = get_db().cursor()
     sql = '''
-    requête admin_article_6    
+    SELECT id_vetement as id_article,
+    nom_vetement as nom,
+    prix_vetement as prix,
+    matiere,
+    description,
+    fournisseur,
+    marque,
+    image,
+    id_type_vetement as type_article_id             
+     FROM vetement WHERE id_vetement = %s    
     '''
     mycursor.execute(sql, id_article)
     article = mycursor.fetchone()
     print(article)
     sql = '''
-    requête admin_article_7
+    SELECT id_type_vetement as id_type_article,
+     libelle_type_vetement as libelle
+     FROM type_vetement
     '''
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
@@ -173,7 +184,7 @@ def valid_edit_article():
     prix = request.form.get('prix', '')
     description = request.form.get('description')
     sql = '''
-       requête admin_article_8
+    SELECT image FROM vetement WHERE id_vetement = %s
        '''
     mycursor.execute(sql, id_article)
     image_nom = mycursor.fetchone()
@@ -188,7 +199,7 @@ def valid_edit_article():
             image.save(os.path.join('static/images/', filename))
             image_nom = filename
 
-    sql = '''  requête admin_article_9 '''
+    sql = '''  UPDATE vetement SET nom_vetement = %s, image = %s, prix_vetement = %s, id_type_vetement = %s, description = %s WHERE id_vetement = %s'''
     mycursor.execute(sql, (nom, image_nom, prix, type_article_id, description, id_article))
 
     get_db().commit()
