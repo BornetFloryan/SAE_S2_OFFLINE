@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv('./.env')
 def get_db():
     if 'db' not in g:
-        g.db =  pymysql.connect(
+        g.db = pymysql.connect(
             host=os.environ.get("HOST"),
             user=os.environ.get("LOGIN"),
             password=os.environ.get("PASSWORD"),
