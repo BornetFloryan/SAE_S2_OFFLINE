@@ -79,6 +79,12 @@ def client_coordonnee_delete_adresse():
 def client_coordonnee_add_adresse():
     mycursor = get_db().cursor()
     id_client = session['id_user']
+    sql = '''SELECT COUNT(id_adresse) as nb_adresses FROM adresse WHERE id_utilisateur = %s'''
+    mycursor.execute(sql, id_client)
+    nb_adresse = mycursor.fetchone()
+    if nb_adresse['nb_adresses'] >= 4:
+        flash(u'Vous avez déjà 4 adresses', 'alert-warning')
+        return redirect('/client/coordonnee/show')
     sql = '''SELECT login as login, nom as nom FROM utilisateur WHERE id_utilisateur = %s'''
     mycursor.execute(sql, id_client)
     utilisateur = mycursor.fetchone()

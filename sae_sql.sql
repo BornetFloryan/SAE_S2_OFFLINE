@@ -158,9 +158,9 @@ INSERT INTO utilisateur(id_utilisateur,login,email,password,role,nom,est_actif) 
     'pbkdf2:sha256:600000$3YgdGN0QUT1jjZVN$baa9787abd4decedc328ed56d86939ce816c756ff6d94f4e4191ffc9bf357348',
     'ROLE_client','client2','1');
 
-INSERT INTO adresse(id_adresse, nom_adresse, rue, code_postal, ville, id_utilisateur) VALUES
-(1, 'client1', '9 rue des Peupliers', 31000, 'Toulouse', 2),
-(2, 'client2', '24 rue des Ecoles', 49000, 'Angers', 3);
+INSERT INTO adresse(nom_adresse, rue, code_postal, ville, id_utilisateur) VALUES
+('client1', '9 rue des Peupliers', 31000, 'Toulouse', 2),
+('client2', '24 rue des Ecoles', 49000, 'Angers', 3);
 
 INSERT INTO etat(id_etat, libelle) VALUES
 (1, 'En attente'),
