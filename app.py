@@ -3,9 +3,9 @@
 
 from flask import Flask, request, render_template, redirect, url_for, abort, flash, session, g
 from flask import Blueprint
-from subprocess import run
 from dotenv import load_dotenv
 import os
+
 
 from controllers.auth_security import *
 from controllers.fixtures_load import *
@@ -45,14 +45,10 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-if __name__ == "__main__":
-    app.run()
-
 
 @app.route('/')
 def show_accueil():
     return render_template('auth/layout.html')
-
 
 ##################
 # Authentification
@@ -62,22 +58,22 @@ def show_accueil():
 
 @app.before_request
 def before_request():
-    if request.path.startswith('/admin') or request.path.startswith('/client'):
+     if request.path.startswith('/admin') or request.path.startswith('/client'):
         if 'role' not in session:
             return redirect('/login')
         else:
-            if (request.path.startswith('/client') and session['role'] != 'ROLE_client') or (
-                    request.path.startswith('/admin') and session['role'] != 'ROLE_admin'):
+            if (request.path.startswith('/client') and session['role'] != 'ROLE_client') or (request.path.startswith('/admin') and session['role'] != 'ROLE_admin'):
                 print('pb de route : ', session['role'], request.path.title(), ' => deconnexion')
                 session.pop('login', None)
                 session.pop('role', None)
                 return redirect('/login')
-    # if session['role'] == 'ROLE_client':
-    #    if not request.path.startswith('/client'):
-    #        return redirect('/client/article/show')
-    # if session['role'] == 'ROLE_admin':
-    #    if not request.path.startswith('/admin'):
-    #        return redirect('/admin')
+     # if session['role'] == 'ROLE_client':
+     #    if not request.path.startswith('/client'):
+     #        return redirect('/client/article/show')
+     # if session['role'] == 'ROLE_admin':
+     #    if not request.path.startswith('/admin'):
+     #        return redirect('/admin')
+
 
 
 app.register_blueprint(auth_security)
@@ -97,5 +93,7 @@ app.register_blueprint(admin_type_article)
 app.register_blueprint(admin_dataviz)
 app.register_blueprint(admin_commentaire)
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
+
