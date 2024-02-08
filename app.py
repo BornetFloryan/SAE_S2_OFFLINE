@@ -3,7 +3,7 @@
 
 from flask import Flask, request, render_template, redirect, url_for, abort, flash, session, g
 from flask import Blueprint
-from dotenv import load_dotenv
+from subprocess import run
 import os
 
 
@@ -28,14 +28,11 @@ app = Flask(__name__)
 app.secret_key = 'une cle(token) : grain de sel(any random string)'
 
 
-load_dotenv("./.env")
 @app.route('/github_webhook', methods=['POST'])
 def github_webhook():
     if request.method == 'POST':
-        host = os.getenv("HOST")
-        if host != "localhost":
-            run("touch /var/www/vetementsae_pythonanywhere_com_wsgi.py", shell=True)
-            return 'Succès', 200
+        run("touch /var/www/vetementsae_pythonanywhere_com_wsgi.py", shell=True)
+        return 'Succès', 200
     else:
         return 'Méthode non autorisée', 405
 
