@@ -112,7 +112,8 @@ CREATE TABLE IF NOT EXISTS stock_vetement(
     id_taille INT,
     stock INT,
     PRIMARY KEY(id_stock),
-    FOREIGN KEY (id_vetement) REFERENCES vetement(id_vetement)
+    FOREIGN KEY (id_vetement) REFERENCES vetement(id_vetement),
+    FOREIGN KEY (id_taille) REFERENCES taille(id_taille)
 );
 
 
