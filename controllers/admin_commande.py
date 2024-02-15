@@ -37,13 +37,28 @@ def admin_commande_show():
     mycursor.execute(sql)
     commandes= mycursor.fetchall()
 
-    articles_commande = None
-    commande_adresses = None
+
     id_commande = request.args.get('id_commande', None)
     print(id_commande)
     if id_commande != None:
-        sql = '''    '''
-        commande_adresses = []
+        sql = '''
+        SELECT id_commande,
+        nom_vetement as nom,
+        SUM(quantite) as quantite,
+        prix_vetement as prix,
+        ROUND(SUM(prix_vetement * quantite), 2) as prix_ligne
+        FROM commande
+        JOIN ligne_commande ON commande.id_commande = ligne_commande.commande_id
+        JOIN vetement ON ligne_commande.vetement_id = vetement.id_vetement
+        WHERE id_commande = %s
+        GROUP BY id_commande, quantite, prix_vetement, nom_vetement
+        '''
+        mycursor.execute(sql, id_commande)
+        articles_commande = mycursor.fetchall()
+        commande_adresses = None
+    else:
+        articles_commande = None
+        commande_adresses = None
     return render_template('admin/commandes/show.html'
                            , commandes=commandes
                            , articles_commande=articles_commande

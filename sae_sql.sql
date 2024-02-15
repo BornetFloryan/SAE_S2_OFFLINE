@@ -81,9 +81,11 @@ CREATE TABLE IF NOT EXISTS commande(
     date_achat DATE,
     utilisateur_id INT,
     etat_id INT,
+    adresse_id INT,
     PRIMARY KEY(id_commande),
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
-    FOREIGN KEY (etat_id) REFERENCES etat(id_etat)
+    FOREIGN KEY (etat_id) REFERENCES etat(id_etat),
+    FOREIGN KEY (adresse_id) REFERENCES adresse(id_adresse)
 );
 
 CREATE TABLE IF NOT EXISTS ligne_commande(
@@ -169,9 +171,9 @@ INSERT INTO etat(id_etat, libelle) VALUES
 (3, 'Validé'),
 (4, 'Confirmé');
 
-INSERT INTO commande(date_achat, utilisateur_id, etat_id) VALUES
-('2024-01-25', 2, 1),
-('2024-01-24', 3, 2);
+INSERT INTO commande(date_achat, utilisateur_id, etat_id, adresse_id) VALUES
+('2024-01-25', 2, 1, 1),
+('2024-01-24', 3, 2, 2);
 
 INSERT INTO ligne_commande(commande_id, vetement_id, prix, quantite) VALUES
 (1, 1, 29.99, 2),

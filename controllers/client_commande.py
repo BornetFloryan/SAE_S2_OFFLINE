@@ -111,10 +111,24 @@ def client_commande_show():
     id_commande = request.args.get('id_commande', None)
     if id_commande != None:
         print(id_commande)
-        sql = ''' selection du détails d'une commande '''
+        sql = ''' 
+        SELECT id_commande,
+        nom_vetement as nom,
+        SUM(quantite) as quantite,
+        prix_vetement as prix,
+        ROUND(SUM(prix_vetement * quantite), 2) as prix_ligne
+        FROM commande
+        JOIN ligne_commande ON commande.id_commande = ligne_commande.commande_id
+        JOIN vetement ON ligne_commande.vetement_id = vetement.id_vetement
+        WHERE id_commande = %s
+        GROUP BY id_commande, quantite, prix_vetement, nom_vetement
+         '''
+        mycursor.execute(sql, (id_commande,))
+        articles_commande = mycursor.fetchall()
 
-        # partie 2 : selection de l'adresse de livraison et de facturation de la commande selectionnée
         sql = ''' SELECT * FROM adresse WHERE id_utilisateur = %s '''
+        mycursor.execute(sql, (id_client,))
+        commande_adresses = mycursor.fetchall()
 
     return render_template('client/commandes/show.html'
                            , commandes=commandes
