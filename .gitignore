@@ -5,8 +5,9 @@
 *.ini
 
 
-# Ignorer le flask_run.bat
+# Ignorer le flask_run.bat, flask_run.sh
 flask_run.bat
+flask_run.sh
 
 # Ignorer __pycache__
 *__pycache__
