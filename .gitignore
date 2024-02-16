@@ -1,10 +1,12 @@
-# Ignorer le .env, .idea, .git
-.env
-.idea
-.git
+# Ignorer le .env, .idea, .git, .ini
+*.env
+*.idea
+*.git
+*.ini
+
 
 # Ignorer le flask_run.bat
 flask_run.bat
 
-
-
+# Ignorer __pycache__
+*__pycache__
