@@ -175,11 +175,11 @@ INSERT INTO commande(date_achat, utilisateur_id, etat_id, adresse_id) VALUES
 ('2024-01-25', 2, 1, 1),
 ('2024-01-24', 3, 2, 2);
 
-INSERT INTO ligne_commande(commande_id, vetement_id, prix, quantite) VALUES
-(1, 1, 29.99, 2),
-(1, 2, 79.99, 1),
-(2, 3, 49.99, 1),
-(2, 4, 69.99, 3);
+# INSERT INTO ligne_commande(commande_id, vetement_id, prix, quantite) VALUES
+# (1, 1, 29.99, 2),
+# (1, 2, 79.99, 1),
+# (2, 3, 49.99, 1),
+# (2, 4, 69.99, 3);
 
 INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, date_ajout) VALUES
 (2, 5, 2, '2024-01-25'),

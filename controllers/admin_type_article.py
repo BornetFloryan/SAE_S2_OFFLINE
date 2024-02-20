@@ -41,9 +41,19 @@ def valid_add_type_article():
 def delete_type_article():
     id_type_article = request.args.get('id_type_article', '')
     mycursor = get_db().cursor()
+    sql = '''SELECT * FROM vetement WHERE id_type_vetement = %s'''
+    mycursor.execute(sql, (id_type_article,))
+    articles = mycursor.fetchall()
+    if len(articles) == 0:
+        sql = '''DELETE FROM type_vetement WHERE id_type_vetement = %s'''
+        mycursor.execute(sql, (id_type_article,))
+        get_db().commit()
+        flash(u'suppression type article, id : ' + id_type_article, 'alert-success')
+        return redirect('/admin/type-article/show')
+    else:
+        flash(u'Impossible de supprimer ce type d\'article, il est utilisé par des articles', 'alert-danger')
+        return redirect('/admin/article/show?id_type_article=' + id_type_article)
 
-    flash(u'suppression type article , id : ' + id_type_article, 'alert-success')
-    return redirect('/admin/type-article/show')
 
 @admin_type_article.route('/admin/type-article/edit', methods=['GET'])
 def edit_type_article():
