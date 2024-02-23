@@ -16,42 +16,23 @@ admin_article = Blueprint('admin_article', __name__,
 
 @admin_article.route('/admin/article/show')
 def show_article():
-    id_type_article = request.args.get('id_type_article', '')
     mycursor = get_db().cursor()
-    if id_type_article:
-        sql = '''SELECT v.id_vetement as id_article,
-                    nom_vetement as nom,
-                    prix_vetement as prix,
-                    v.id_type_vetement as type_article_id,
-                    image as image,
-                    libelle_type_vetement as libelle,
-                    sv.stock as stock,
-                    t.libelle_taille as taille
-                FROM vetement v
-                JOIN type_vetement tv ON v.id_type_vetement = tv.id_type_vetement
-                LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
-                LEFT JOIN taille t ON sv.id_taille = t.id_taille
-                WHERE v.id_type_vetement = %s
-                GROUP BY v.id_vetement, sv.id_stock, v.nom_vetement, v.prix_vetement, v.id_type_vetement, v.image, tv.libelle_type_vetement, sv.stock, t.libelle_taille
-        '''
-        mycursor.execute(sql, id_type_article)
-    else:
-        sql = '''SELECT
-                v.id_vetement as id_article,
-                nom_vetement as nom,
-                prix_vetement as prix,
-                v.id_type_vetement as type_article_id,
-                image as image,
-                libelle_type_vetement as libelle,
-                sv.stock as stock,
-                t.libelle_taille as taille
+    sql = '''SELECT
+            v.id_vetement as id_article,
+            nom_vetement as nom,
+            prix_vetement as prix,
+            v.id_type_vetement as type_article_id,
+            image as image,
+            libelle_type_vetement as libelle,
+            sv.stock as stock,
+            t.libelle_taille as taille
             FROM vetement v
             JOIN type_vetement tv ON v.id_type_vetement = tv.id_type_vetement
             LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
             LEFT JOIN taille t ON sv.id_taille = t.id_taille
             GROUP BY v.id_vetement, sv.id_stock, v.nom_vetement, v.prix_vetement, v.id_type_vetement, v.image, tv.libelle_type_vetement, sv.stock, t.libelle_taille
         '''
-        mycursor.execute(sql)
+    mycursor.execute(sql)
     articles = mycursor.fetchall()
 
     return render_template('admin/article/show_article.html', articles=articles)
@@ -125,7 +106,6 @@ def valid_add_article():
 
 @admin_article.route('/admin/article/delete', methods=['GET'])
 def delete_article():
-    id_type_article = request.args.get('id_type_article', '')
     id_article=request.args.get('id_article')
     mycursor = get_db().cursor()
     sql = ''' SELECT COUNT(id_taille) as nb_declinaison FROM stock_vetement WHERE id_vetement = %s '''
@@ -161,12 +141,6 @@ def delete_article():
             print("un article supprimé, id :", id_article)
             message = u'un article supprimé, id : ' + id_article
             flash(message, 'alert-success')
-        sql= '''SELECT count(id_vetement) FROM vetement WHERE id_type_vetement = %s'''
-        mycursor.execute(sql, id_type_article)
-        nbr_vetement = mycursor.fetchone()
-        print(nbr_vetement['count(id_vetement)'])
-        if id_type_article != None and nbr_vetement['count(id_vetement)'] != 0:
-            return redirect('/admin/article/show?id_type_article=' + id_type_article)
     return redirect('/admin/article/show')
 
 
