@@ -14,15 +14,18 @@ def client_article_show():                                 # remplace client_ind
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    sql = '''   SELECT vetement.id_vetement as id_article, 
-                nom_vetement as nom, 
-                prix_vetement as prix,  
+    sql = '''   SELECT 
+                v.id_vetement as id_article,
+                nom_vetement as nom,
+                prix_vetement as prix,
+                id_type_vetement as id_type, 
                 image as image, 
-                id_type_vetement as id_type,
-                stock_vetement.stock as stock
-                FROM vetement 
-                LEFT JOIN stock_vetement on vetement.id_vetement = stock_vetement.id_vetement
-                GROUP BY vetement.id_vetement, nom_vetement, prix_vetement, image, id_type_vetement, stock_vetement.stock
+                SUM(sv.stock) as stock,
+                COUNT(sv.id_stock) as nb_declinaison
+                FROM vetement v
+                LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
+                GROUP BY v.id_vetement, v.nom_vetement, v.prix_vetement, image, 
+                v.id_type_vetement
                 '''
     list_param = []
     condition_and = ""
@@ -41,28 +44,38 @@ def client_article_show():                                 # remplace client_ind
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
 
-    sql = '''SELECT vetement_id as id_article,
+    sql = '''SELECT vetement.id_vetement as id_article,
             nom_vetement as nom,
             quantite,
            ROUND(prix_vetement, 2) as prix,
-           stock
+           stock,
+           id_stock as id_declinaison_article,
+           stock_vetement.id_taille,
+           libelle_taille
            FROM ligne_panier
-           LEFT JOIN vetement on vetement.id_vetement = ligne_panier.vetement_id
-              LEFT JOIN stock_vetement on vetement.id_vetement = stock_vetement.id_vetement
+           LEFT JOIN stock_vetement on ligne_panier.stock_id = stock_vetement.id_stock
+           LEFT JOIN vetement on vetement.id_vetement = stock_vetement.id_vetement
+           JOIN taille on taille.id_taille = stock_vetement.id_taille
            WHERE utilisateur_id = %s
-           GROUP BY nom_vetement, quantite, prix_vetement, vetement_id, stock
-                      '''
+           GROUP BY nom_vetement, quantite, prix_vetement, 
+           vetement.id_vetement, stock, id_stock, id_taille, libelle_taille
+           ORDER BY quantite DESC'''
     mycursor.execute(sql, (id_client,))
     articles_panier = mycursor.fetchall()
 
     if len(articles_panier) >= 1:
-        sql = ''' calcul du prix total du panier '''
-        prix_total = None
+        sql = ''' SELECT SUM(v.prix_vetement * lp.quantite) AS prix_total
+        FROM ligne_panier lp
+        JOIN stock_vetement ON lp.stock_id = stock_vetement.id_stock
+        JOIN vetement v ON stock_vetement.id_vetement = v.id_vetement
+        WHERE lp.utilisateur_id = %s; '''
+        mycursor.execute(sql, (id_client,))
+        prix_total = mycursor.fetchone()
     else:
         prix_total = None
     return render_template('client/boutique/panier_article.html'
                            , articles=articles
                            , articles_panier=articles_panier
-                           #, prix_total=prix_total
+                           , prix_total=prix_total
                            , items_filtre=types_article
                            )

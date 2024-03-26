@@ -18,23 +18,24 @@ admin_article = Blueprint('admin_article', __name__,
 def show_article():
     mycursor = get_db().cursor()
     sql = '''SELECT
-            v.id_vetement as id_article,
-            nom_vetement as nom,
-            prix_vetement as prix,
-            v.id_type_vetement as type_article_id,
-            image as image,
-            libelle_type_vetement as libelle,
-            sv.stock as stock,
-            t.libelle_taille as taille
-            FROM vetement v
-            JOIN type_vetement tv ON v.id_type_vetement = tv.id_type_vetement
-            LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
-            LEFT JOIN taille t ON sv.id_taille = t.id_taille
-            GROUP BY v.id_vetement, sv.id_stock, v.nom_vetement, v.prix_vetement, v.id_type_vetement, v.image, tv.libelle_type_vetement, sv.stock, t.libelle_taille
-        '''
+        v.id_vetement as id_article,
+        nom_vetement as nom,
+        prix_vetement as prix,
+        v.id_type_vetement as type_article_id,
+        image as image,
+        libelle_type_vetement as libelle,
+        SUM(sv.stock) as stock,
+        COUNT(sv.id_stock) as nb_declinaisons,
+        (SELECT MIN(stock) FROM stock_vetement WHERE id_vetement = v.id_vetement) AS min_stock
+        FROM vetement v
+        JOIN type_vetement tv ON v.id_type_vetement = tv.id_type_vetement
+        LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
+        GROUP BY v.id_vetement, v.nom_vetement, v.prix_vetement, 
+        v.id_type_vetement, v.image, tv.libelle_type_vetement;
+
+ '''
     mycursor.execute(sql)
     articles = mycursor.fetchall()
-
     return render_template('admin/article/show_article.html', articles=articles)
 
 
@@ -111,36 +112,43 @@ def delete_article():
     sql = ''' SELECT COUNT(id_taille) as nb_declinaison FROM stock_vetement WHERE id_vetement = %s '''
     mycursor.execute(sql, id_article)
     nb_declinaison = mycursor.fetchone()
+
+    sql ='''SELECT id_stock FROM stock_vetement WHERE id_vetement = %s'''
+    mycursor.execute(sql, id_article)
+    id_declinaison = mycursor.fetchone()
+
     if nb_declinaison['nb_declinaison'] > 1:
         message= u'il y a des declinaisons dans cet article : vous ne pouvez pas le supprimer'
         flash(message, 'alert-warning')
     else:
-        sql = '''SELECT * FROM ligne_commande WHERE vetement_id = %s'''
+        if id_declinaison != None:
+            sql = '''SELECT * FROM ligne_commande WHERE stock_id = %s'''
+            mycursor.execute(sql, id_declinaison['id_stock'])
+            ligne_commande = mycursor.fetchall()
+            if ligne_commande:
+                message = u'il y a des commandes pour cet article : vous ne pouvez pas le supprimer'
+                flash(message, 'alert-warning')
+                return redirect('/admin/article/show')
+
+        print('coucou')
+        sql = ''' SELECT * FROM vetement WHERE id_vetement = %s '''
         mycursor.execute(sql, id_article)
-        ligne_commande = mycursor.fetchall()
-        if ligne_commande:
-            message = u'il y a des commandes pour cet article : vous ne pouvez pas le supprimer'
-            flash(message, 'alert-warning')
+        article = mycursor.fetchone()
+        image = article['image']
 
-        else:
-            sql = ''' SELECT * FROM vetement WHERE id_vetement = %s '''
-            mycursor.execute(sql, id_article)
-            article = mycursor.fetchone()
-            print(article)
-            image = article['image']
-
-            sql = ''' DELETE FROM stock_vetement WHERE id_vetement = %s '''
-            mycursor.execute(sql, id_article)
-            sql = ''' DELETE FROM ligne_panier WHERE vetement_id = %s '''
-            mycursor.execute(sql, id_article)
-            sql = ''' DELETE FROM vetement WHERE id_vetement = %s '''
-            mycursor.execute(sql, id_article)
-            get_db().commit()
-            # if image != None:
-            #     os.remove('static/images/' + image)
-            print("un article supprimé, id :", id_article)
-            message = u'un article supprimé, id : ' + id_article
-            flash(message, 'alert-success')
+        sql = ''' DELETE FROM stock_vetement WHERE id_vetement = %s '''
+        mycursor.execute(sql, id_article)
+        if id_declinaison != None:
+            sql = ''' DELETE FROM ligne_panier WHERE stock_id = %s '''
+            mycursor.execute(sql, id_declinaison['id_stock'])
+        sql = ''' DELETE FROM vetement WHERE id_vetement = %s '''
+        mycursor.execute(sql, id_article)
+        get_db().commit()
+        # if image != None:
+        #     os.remove('static/images/' + image)
+        print("un article supprimé, id :", id_article)
+        message = u'un article supprimé, id : ' + id_article
+        flash(message, 'alert-success')
     return redirect('/admin/article/show')
 
 
@@ -162,7 +170,6 @@ def edit_article():
     '''
     mycursor.execute(sql, id_article)
     article = mycursor.fetchone()
-    print(article)
     sql = '''
     SELECT id_type_vetement as id_type_article,
      libelle_type_vetement as libelle
@@ -171,16 +178,21 @@ def edit_article():
     mycursor.execute(sql)
     types_article = mycursor.fetchall()
 
-    # sql = '''
-    # requête admin_article_6
-    # '''
-    # mycursor.execute(sql, id_article)
-    # declinaisons_article = mycursor.fetchall()
+    sql = '''SELECT id_stock as id_declinaison_article,
+    id_vetement as article_id , 
+    sv.id_taille,
+    libelle_taille,
+    stock 
+    FROM stock_vetement sv
+    JOIN bdd_sae.taille t on sv.id_taille = t.id_taille
+    WHERE id_vetement = %s'''
+    mycursor.execute(sql, id_article)
+    declinaisons_article = mycursor.fetchall()
 
     return render_template('admin/article/edit_article.html'
                            ,article=article
                            ,types_article=types_article
-                         #  ,declinaisons_article=declinaisons_article
+                           ,declinaisons_article=declinaisons_article
                            )
 
 

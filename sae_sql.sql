@@ -88,44 +88,45 @@ CREATE TABLE IF NOT EXISTS commande(
     FOREIGN KEY (adresse_id) REFERENCES adresse(id_adresse)
 );
 
-CREATE TABLE IF NOT EXISTS ligne_commande(
-    commande_id INT,
-    vetement_id INT,
-    prix FLOAT,
-    quantite INT,
-    PRIMARY KEY(commande_id, vetement_id),
-    FOREIGN KEY (commande_id) REFERENCES commande(id_commande),
-    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
-);
-
-CREATE TABLE IF NOT EXISTS ligne_panier(
-    utilisateur_id INT,
-    vetement_id INT,
-    quantite INT,
-    date_ajout DATE,
-    PRIMARY KEY(utilisateur_id, vetement_id),
-    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
-    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement)
-);
-
 CREATE TABLE IF NOT EXISTS stock_vetement(
     id_stock INT NOT NULL AUTO_INCREMENT,
+    stock INT,
     id_vetement INT,
     id_taille INT,
-    stock INT,
     PRIMARY KEY(id_stock),
     FOREIGN KEY (id_vetement) REFERENCES vetement(id_vetement),
     FOREIGN KEY (id_taille) REFERENCES taille(id_taille)
 );
 
+CREATE TABLE IF NOT EXISTS ligne_commande(
+    commande_id INT,
+    stock_id INT,
+    prix FLOAT,
+    quantite INT,
+    PRIMARY KEY(commande_id, stock_id),
+    FOREIGN KEY (commande_id) REFERENCES commande(id_commande),
+    FOREIGN KEY (stock_id) REFERENCES stock_vetement(id_stock)
+);
+
+CREATE TABLE IF NOT EXISTS ligne_panier(
+    utilisateur_id INT,
+    stock_id INT,
+    quantite INT,
+    date_ajout DATE,
+    PRIMARY KEY(utilisateur_id, stock_id),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    FOREIGN KEY (stock_id) REFERENCES stock_vetement(id_stock)
+);
+
 
 INSERT INTO taille(id_taille, libelle_taille) VALUES
-(1, 'XS'),
-(2, 'S'),
-(3, 'M'),
-(4, 'L'),
-(5, 'XL'),
-(6, 'XXL');
+(1, 'taille unique'),
+(2, 'XS'),
+(3, 'S'),
+(4, 'M'),
+(5, 'L'),
+(6, 'XL'),
+(7, 'XXL');
 
 INSERT INTO type_vetement(id_type_vetement, libelle_type_vetement) VALUES
 (1, 'T-shirt'),
@@ -175,30 +176,26 @@ INSERT INTO commande(date_achat, utilisateur_id, etat_id, adresse_id) VALUES
 ('2024-01-25', 2, 1, 1),
 ('2024-01-24', 3, 2, 2);
 
-# INSERT INTO ligne_commande(commande_id, vetement_id, prix, quantite) VALUES
-# (1, 1, 29.99, 2),
-# (1, 2, 79.99, 1),
-# (2, 3, 49.99, 1),
-# (2, 4, 69.99, 3);
-
-INSERT INTO ligne_panier(utilisateur_id, vetement_id, quantite, date_ajout) VALUES
-(2, 5, 2, '2024-01-25'),
-(2, 6, 1, '2024-01-25');
-
 INSERT INTO stock_vetement(id_vetement, id_taille, stock) VALUES
-(1, 1, 10),
-(2, 1, 5),
-(3, 1, 8),
-(4, 1, 7),
-(5, 1, 14),
-(6, 1, 6),
-(7, 1, 7),
-(8, 1, 8),
-(9, 1, 4),
-(10, 1, 3),
-(11, 1, 1),
-(12, 1, 0),
-(13, 1, 2),
-(14, 1, 7),
-(15, 1, 7);
+(1, 2, 10),
+(1, 3, 5),
+(2, 2, 5),
+(3, 2, 8),
+(3, 5, 8),
+(4, 2, 7),
+(5, 2, 14),
+(6, 2, 6),
+(7, 2, 7),
+(8, 2, 8),
+(9, 2, 4),
+(10, 2, 3),
+(11, 2, 1),
+(12, 2, 0),
+(13, 2, 2),
+(14, 2, 7),
+(15, 2, 7);
+
+INSERT INTO ligne_panier(utilisateur_id, stock_id, quantite, date_ajout) VALUES
+(2, 5, 2, '2024-01-25');
+
 

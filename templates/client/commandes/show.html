@@ -1,40 +1,40 @@
 {% extends "client/layout_client.html" %}
 {% block body %}
     <div class="container-fluid">
-            {% if articles_commande %}
+        {% if articles_commande %}
             <h3>Recapitulatifs de la commande selectionnée</h3>
             <table class="table">
                 <thead class="thead-dark">
-                    <tr><th>Nom</th><th>Quantite</th><th>Prix</th><th>Prix total</th></tr>
+                <tr><th>Nom</th><th>Quantite</th><th>Prix</th><th>Prix total</th></tr>
                 </thead>
                 <tbody>
-                        {% for ligne in articles_commande %}
-                            <tr>
-                                <td>{{ ligne.nom }}
-                                {% if ligne.nb_declinaisons is defined and ligne.nb_declinaisons > 1 %}
-                                    <span style="color:rgba(255,197,197,0.6);"> ( {{ ligne.nb_declinaisons }} declinaisons )</span>
-                                    <span style="color:#6dcea2">
+                {% for ligne in articles_commande %}
+                    <tr>
+                        <td>{{ ligne.nom }}
+                            {% if ligne.nb_declinaisons is defined and ligne.nb_declinaisons > 1 %}
+                                <span style="color:rgba(255,197,197,0.6);"> ( {{ ligne.nb_declinaisons }} declinaisons )</span>
+                                <span style="color:#6dcea2">
                                     {% if ligne.couleur_id != 1 %}
-                                        {{ ligne.libelle_couleur }} 
+                                        {{ ligne.libelle_couleur }}
                                     {% endif %}
                                     </span>
-                                    <span  style="color:#d941c2">
+                                <span  style="color:#d941c2">
                                     {% if ligne.taille_id != 1 %}
-                                        {{ ligne.libelle_taille }} 
+                                        {{ ligne.libelle_taille }}
                                     {% endif %}
                                     </span>
-                                {% endif %}
-                                </td>
-                                <td>{{ ligne.quantite }}</td>
-                                <td>{{ ligne.prix }} €</td>
-                                <td>{{ ligne.prix_ligne }} €  </td>
-                            </tr>
-                        {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td>{{ ligne.quantite }}</td>
+                        <td>{{ ligne.prix }} €</td>
+                        <td>{{ ligne.prix_ligne }} €  </td>
+                    </tr>
+                {% endfor %}
 
                 </tbody>
             </table>
-                <br>
-                <div style="color: brown">
+            <br>
+            <div style="color: brown">
                 <strong>adresse livraison : </strong>{{ commande_adresses.nom_livraison }} {{ commande_adresses.rue_livraison }} {{ commande_adresses.code_postal_livraison }} {{ commande_adresses.ville_livraison }}
                 <br>
                 <strong>adresse facturation : </strong>
@@ -43,7 +43,7 @@
                 {% else %}
                     {{ commande_adresses.nom_facturation }} {{ commande_adresses.rue_facturation }} {{ commande_adresses.code_postal_facturation }} {{ commande_adresses.ville_facturation }}
                 {% endif %}
-                </div>
+            </div>
             <hr>
         {% endif %}
         <div class="card shadow">
@@ -72,7 +72,7 @@
                                 </td>
                                 <td style="text-align: center;">
                                     {% if commande.etat_id == 1 %} <div style="background-color: #ba8b00; padding: 5px;">
-                                     {{ commande.libelle }}
+                                        {{ commande.libelle }}
                                     </div>
                                     {% else %} <div style="background-color: #34ce57; padding: 5px;">
                                         {{ commande.libelle }} </div>
