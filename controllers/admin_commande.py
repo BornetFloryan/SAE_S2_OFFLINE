@@ -20,18 +20,16 @@ def admin_commande_show():
     admin_id = session['id_user']
     sql = '''   
     SELECT id_commande,
-    etat_id,
-    login,
     date_achat,
+    utilisateur_id,
+    etat_id,
     SUM(quantite) as nbr_articles,
-    ROUND(SUM(vetement.prix_vetement * quantite), 2) as prix_total,
-    etat.libelle
-    FROM commande 
-    JOIN utilisateur ON commande.utilisateur_id = utilisateur.id_utilisateur
-    JOIN etat ON commande.etat_id = etat.id_etat
+    ROUND(SUM(prix * quantite), 2) as prix_total,
+    libelle
+    FROM commande
     JOIN ligne_commande ON commande.id_commande = ligne_commande.commande_id
-    JOIN vetement ON ligne_commande.vetement_id = vetement.id_vetement
-    GROUP BY id_commande, etat_id, login, date_achat, etat.libelle
+    JOIN etat ON commande.etat_id = etat.id_etat
+    GROUP BY id_commande, date_achat, utilisateur_id, etat_id, libelle
     ORDER BY etat_id, date_achat DESC
     '''
     mycursor.execute(sql)
@@ -42,16 +40,22 @@ def admin_commande_show():
     print(id_commande)
     if id_commande != None:
         sql = '''
-        SELECT id_commande,
-        nom_vetement as nom,
-        SUM(quantite) as quantite,
-        prix_vetement as prix,
-        ROUND(SUM(prix_vetement * quantite), 2) as prix_ligne
-        FROM commande
-        JOIN ligne_commande ON commande.id_commande = ligne_commande.commande_id
-        JOIN vetement ON ligne_commande.vetement_id = vetement.id_vetement
-        WHERE id_commande = %s
-        GROUP BY id_commande, quantite, prix_vetement, nom_vetement
+        SELECT c.id_commande,
+        nom_vetement AS nom,
+        lc.quantite,
+        prix_vetement AS prix,
+        ROUND(lc.quantite * v.prix_vetement, 2) AS prix_ligne,
+        COUNT(sv2.id_vetement) AS nb_declinaisons,
+        t.id_taille AS taille_id,
+        libelle_taille
+        FROM ligne_commande lc 
+        JOIN commande c ON lc.commande_id = c.id_commande
+        JOIN stock_vetement sv ON lc.stock_id = sv.id_stock
+        JOIN vetement v ON sv.id_vetement = v.id_vetement
+        LEFT JOIN taille t ON sv.id_taille = t.id_taille    
+        LEFT JOIN stock_vetement sv2 ON sv.id_vetement = sv2.id_vetement
+        WHERE c.id_commande = %s    
+        GROUP BY nom_vetement, lc.quantite, prix_vetement, t.id_taille, libelle_taille, id_commande, v.id_vetement;
         '''
         mycursor.execute(sql, id_commande)
         articles_commande = mycursor.fetchall()

@@ -46,11 +46,11 @@ def client_article_details():
     
     
     sql = '''    
-    SELECT COUNT(lc.vetement_id) as nb_commandes_article
+    SELECT COUNT(lc.stock_id) as nb_commandes_article
     FROM ligne_commande lc
     JOIN commande c ON lc.commande_id = c.id_commande
     JOIN utilisateur u ON c.utilisateur_id = u.id_utilisateur
-    WHERE u.id_utilisateur = %s AND lc.vetement_id = %s
+    WHERE u.id_utilisateur = %s AND lc.stock_id = %s
     '''
     
     mycursor.execute(sql, (id_client, id_article))

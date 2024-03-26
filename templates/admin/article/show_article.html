@@ -37,7 +37,7 @@ articles (tableau de dictionnaires)
                   {% if ligne.stock is defined %}
                      {% if ligne.stock != None  %}
                         {% if ligne.stock > 0 %}
-                            <strong style="color: green">{{ ligne.taille }} : {{ ligne.stock }}</strong>
+                            <strong style="color: green">{{ ligne.taille }} {{ ligne.stock }}</strong>
                             {% if ligne.min_stock is defined  and ligne.min_stock <= 0 %}
                                 <span style="color: #fd7e14">(⚠️ déclinaison(s) en rupture)</span>
                             {% endif %}
