@@ -8,7 +8,6 @@ from connexion_db import get_db
 client_panier = Blueprint('client_panier', __name__,
                           template_folder='templates')
 
-
 @client_panier.route('/client/panier/add', methods=['POST'])
 def client_panier_add():
     mycursor = get_db().cursor()
@@ -30,7 +29,6 @@ def client_panier_add():
     mycursor.execute(sql_select_article, (id_article,))
 
     if id_article:
-        print("bjr")
         # ajout dans le panier d'une déclinaison d'un article (si 1 declinaison : immédiat sinon => vu pour faire un choix
         sql = '''SELECT id_stock as id_declinaison_article,
             sv.id_taille as id_taille,
@@ -51,14 +49,10 @@ def client_panier_add():
             mycursor.execute(sql, tuple_update)
             dec_stock()
             get_db().commit()
-            print('c')
             return redirect('/client/article/show')
         if len(declinaisons) == 1:
             id_declinaison_article = declinaisons[0]['id_declinaison_article']
-            print(id_declinaison_article)
             tuple_insert = (id_client, id_declinaison_article, quantite)
-            print(tuple_insert)
-            print('e')
             sql = '''
                         INSERT INTO ligne_panier (utilisateur_id, stock_id, quantite, date_ajout)
                         VALUES (%s, %s, %s, current_timestamp)
@@ -90,11 +84,8 @@ def client_panier_add():
             mycursor.execute(sql, tuple_update)
             dec_stock()
             get_db().commit()
-            print('cd')
         else:
             tuple_insert = (id_client, id_declinaison, quantite)
-            print(tuple_insert)
-            print('p')
             sql = '''INSERT INTO ligne_panier (utilisateur_id, stock_id, quantite, date_ajout)
                      VALUES (%s, %s, %s, current_timestamp)
                    '''
@@ -112,7 +103,7 @@ def client_panier_add():
                         WHERE id_vetement = %s'''
         mycursor.execute(sql, id_article)
         declinaisons = mycursor.fetchall()
-        print(declinaisons)
+
 
         sql = '''SELECT id_vetement as id_article,
                 nom_vetement as nom,
@@ -193,7 +184,6 @@ def client_panier_delete_line():
         WHERE utilisateur_id = %s and stock_id = %s ''' #selection de ligne du panier
     mycursor.execute(sql, (id_client, id_declinaison_article))
     quantite = mycursor.fetchone().get("quantite")
-    print(quantite)
 
     sql = ''' DELETE FROM ligne_panier
         WHERE utilisateur_id = %s AND stock_id = %s''' #suppression de la ligne du panier
@@ -201,7 +191,7 @@ def client_panier_delete_line():
 
     sql2=''' UPDATE stock_vetement 
     SET stock = stock + %s
-    WHERE id_stock = %s''' #mise à jour du stock de l'article : stock = stock + qté de la ligne pour l'
+    WHERE id_stock = %s''' #mise à jour du stock de l'article : stock = stock + qté de la ligne
     mycursor.execute(sql2, (quantite, id_declinaison_article))
 
     get_db().commit()
@@ -226,9 +216,10 @@ def client_panier_filtre():
                 prix_vetement as prix,  
                 image as image, 
                 id_type_vetement as id_type,
-                SUM(stock_vetement.stock) as stock
+                SUM(sv.stock) as stock,
+                COUNT(sv.id_stock) as nb_declinaison
               FROM vetement v
-              LEFT JOIN stock_vetement on v.id_vetement = stock_vetement.id_vetement
+              LEFT JOIN stock_vetement sv on v.id_vetement = sv.id_vetement
               WHERE 1=1 '''
 
     if filter_word is not None and filter_word != '':
@@ -358,5 +349,3 @@ def dec_stock():
                 '''
         mycursor.execute(sql, (quantite, id_article))
         get_db().commit()
-
-
