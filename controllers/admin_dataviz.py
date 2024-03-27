@@ -11,23 +11,30 @@ admin_dataviz = Blueprint('admin_dataviz', __name__,
 @admin_dataviz.route('/admin/dataviz/etat1')
 def show_type_article_stock():
     mycursor = get_db().cursor()
-    sql = '''
-    
-           '''
-    # mycursor.execute(sql)
-    # datas_show = mycursor.fetchall()
-    # labels = [str(row['libelle']) for row in datas_show]
-    # values = [int(row['nbr_articles']) for row in datas_show]
+    sql = '''SELECT tv.id_type_vetement as id_type_article,
+                tv.libelle_type_vetement as libelle,
+                COUNT(v.id_type_vetement) as nbr_articles,
+                SUM(stock) as nbr_articles_stock
+            FROM type_vetement tv
+            LEFT JOIN vetement v ON tv.id_type_vetement = v.id_type_vetement
+            LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
+            GROUP BY tv.id_type_vetement, libelle_type_vetement
+            '''
+
+    mycursor.execute(sql)
+    datas_show = mycursor.fetchall()
+    labels = [str(row['libelle']) for row in datas_show]
+    values = [int(row['nbr_articles']) for row in datas_show]
 
     # sql = '''
     #         
     #        '''
-    datas_show=[]
-    labels=[]
-    values=[]
+    # datas_show=[]
+    # labels=[]
+    # values=[]
 
     return render_template('admin/dataviz/dataviz_etat_1.html'
-                           , datas_show=datas_show
+                           , types_articles_nb=datas_show
                            , labels=labels
                            , values=values)
 
