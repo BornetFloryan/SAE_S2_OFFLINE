@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS ligne_panier, ligne_commande, commande, etat,
-    adresse, note, commentaire, utilisateur ,stock_vetement, vetement, type_vetement, taille;
+    adresse, note, commentaire, utilisateur ,stock_vetement, vetement,liste_envie , historique, type_vetement, taille;
 
 CREATE TABLE IF NOT EXISTS taille(
     id_taille INT NOT NULL AUTO_INCREMENT,
@@ -116,6 +116,28 @@ CREATE TABLE IF NOT EXISTS ligne_panier(
     PRIMARY KEY(utilisateur_id, stock_id),
     FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
     FOREIGN KEY (stock_id) REFERENCES stock_vetement(id_stock)
+);
+
+CREATE TABLE IF NOT EXISTS liste_envie(
+    vetement_id INT,
+    utilisateur_id INT,
+    date_liste_envie DATETIME,
+    ordre INT,
+    PRIMARY KEY(vetement_id,utilisateur_id),
+    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur)
+);
+
+CREATE TABLE IF NOT EXISTS historique(
+    utilisateur_id INT,
+    vetement_id INT,
+    Image VARCHAR(255),
+    date_historique DATETIME,
+    PRIMARY KEY (utilisateur_id,vetement_id),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id_utilisateur),
+    FOREIGN KEY (vetement_id) REFERENCES vetement(id_vetement),
+    FOREIGN KEY (Image) REFERENCES vetement(image)
+
 );
 
 
