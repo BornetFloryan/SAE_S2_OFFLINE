@@ -18,7 +18,7 @@ def client_article_details():
     id_client = session['id_user']
 
     # partie 4
-    # client_historique_add(id_article, id_client)
+    client_historique_add(id_article, id_client)
 
     sql = '''
         SELECT ve.nom_vetement as nom, ve.prix_vetement as prix, ve.image, ve.description, ve.id_vetement as id_article, ROUND(AVG(n.note), 2) as moyenne_notes, COUNT(n.note) as nb_notes
