@@ -45,6 +45,7 @@ def client_commande_valide():
     else:
         prix_total = None
     # etape 2 : selection des adresses
+    client_liste_envies_delete2(id_client)
     return render_template('client/boutique/panier_validation_adresses.html'
                            #, adresses=adresses
                            , articles_panier=articles_panier
