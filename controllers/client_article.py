@@ -14,18 +14,17 @@ def client_article_show():                                 # remplace client_ind
     mycursor = get_db().cursor()
     id_client = session['id_user']
 
-    sql = '''   SELECT 
-                v.id_vetement as id_article,
-                nom_vetement as nom,
-                prix_vetement as prix,
-                id_type_vetement as id_type, 
+    sql = '''   SELECT vetement.id_vetement as id_article, 
+                nom_vetement as nom, 
+                prix_vetement as prix,  
                 image as image, 
-                SUM(sv.stock) as stock,
-                COUNT(sv.id_stock) as nb_declinaison
-                FROM vetement v
-                LEFT JOIN stock_vetement sv ON v.id_vetement = sv.id_vetement
-                GROUP BY v.id_vetement, v.nom_vetement, v.prix_vetement, image, 
-                v.id_type_vetement
+                id_type_vetement as id_type,
+                (SELECT 1 FROM liste_envie WHERE vetement.id_vetement=liste_envie.vetement_id AND utilisateur_id=%s) AS liste_envie,
+                stock_vetement.stock as stock
+                FROM vetement
+                LEFT JOIN stock_vetement on vetement.id_vetement = stock_vetement.id_vetement
+                LEFT JOIN liste_envie on vetement.id_vetement = liste_envie.vetement_id
+                GROUP BY vetement.id_vetement, nom_vetement, prix_vetement, image, id_type_vetement, stock_vetement.stock
                 '''
     list_param = []
     condition_and = ""
